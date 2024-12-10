@@ -12,3 +12,11 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Gyerek {
+  id        Int     @id @default(autoincrement())
+  nev       String
+  lakcim    String
+  joVoltE   Boolean
+  kertJatek String?
+}

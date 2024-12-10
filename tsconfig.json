@@ -19,9 +19,11 @@
     "noFallthroughCasesInSwitch": false
   },
   "include": [
-    "src"
+    "src",
+    "prisma/**/*.ts"
   ],
   "exclude": [
-    "prisma"
+    "node_modules",
+    "dist"
   ]
 }
