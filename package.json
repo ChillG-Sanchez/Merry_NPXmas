@@ -75,5 +75,8 @@
   "directories": {
     "test": "test"
   },
-  "keywords": []
+  "keywords": [],
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
+  }
 }

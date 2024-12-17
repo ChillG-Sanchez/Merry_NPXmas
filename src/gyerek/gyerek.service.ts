@@ -23,8 +23,8 @@ export class GyerekService {
     return this.prisma.gyerek.findMany({ where: { joVoltE: true } });
   }
 
-  findAllGames() {
-    return this.prisma.gyerek.groupBy({
+  async findAllGames() {
+    const games = await this.prisma.gyerek.groupBy({
       by: ['kertJatek'],
       _count: {
         kertJatek: true,
@@ -35,10 +35,15 @@ export class GyerekService {
         },
       },
     });
+
+    return games.map(game => ({
+      jatek: game.kertJatek,
+      gyerekekSzama: game._count.kertJatek,
+    }));
   }
 
   findOne(id: number) {
-    return this.prisma.gyerek.findUnique({ where: { id: id } });
+    return this.prisma.gyerek.findUnique({ where: { id } });
   }
 
   async update(id: number, updateGyerekDto: UpdateGyerekDto) {
@@ -51,7 +56,7 @@ export class GyerekService {
     return this.prisma.gyerek.update({ where: { id }, data: updateGyerekDto });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return this.prisma.gyerek.delete({ where: { id } });
   }
 }

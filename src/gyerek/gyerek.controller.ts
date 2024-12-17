@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { GyerekService } from './gyerek.service';
 import { CreateGyerekDto } from './dto/create-gyerek.dto';
 import { UpdateGyerekDto } from './dto/update-gyerek.dto';
@@ -31,20 +31,32 @@ export class GyerekController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gyerekService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const gyerek = await this.gyerekService.findOne(+id);
+    if (!gyerek) {
+      throw new NotFoundException('Gyerek nem található.');
+    }
+    return gyerek;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGyerekDto: UpdateGyerekDto) {
+  async update(@Param('id') id: string, @Body() updateGyerekDto: UpdateGyerekDto) {
     if (!updateGyerekDto.joVoltE && updateGyerekDto.kertJatek) {
       throw new ConflictException('Rossz gyerek nem kérhet játékot.');
     }
-    return this.gyerekService.update(+id, updateGyerekDto);
+    const gyerek = await this.gyerekService.update(+id, updateGyerekDto);
+    if (!gyerek) {
+      throw new NotFoundException('Gyerek nem található.');
+    }
+    return gyerek;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.gyerekService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const gyerek = await this.gyerekService.remove(+id);
+    if (!gyerek) {
+      throw new NotFoundException('Gyerek nem található.');
+    }
+    return gyerek;
   }
 }
